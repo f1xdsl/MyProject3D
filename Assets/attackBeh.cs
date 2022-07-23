@@ -14,7 +14,7 @@ public class attackBeh : StateMachineBehaviour
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.transform.LookAt(player);
+        animator.gameObject.transform.LookAt(player);
         float _distance = Vector3.Distance(animator.transform.position, player.position);
         Debug.DrawLine(animator.transform.position, player.position, Color.blue);
         if(_distance > 3f)

@@ -3,12 +3,12 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     public float Speed = 5f;
-
     public float RaycastLength = 0.1f;
-
     public float JumpForce = 2f;
     public int mask = 1 << 3;
     private Rigidbody _rb;
+    [SerializeField] GameObject CameraFirst;
+    [SerializeField] GameObject CameraThird;
     public bool isGrounded = false;
     private int _runDir;
     // public Animator AnimControl;
@@ -21,6 +21,7 @@ public class CharacterMovement : MonoBehaviour
     }
 
     private void Update() {
+        if(Input.GetKeyDown(KeyCode.C)) CameraSwitch();
         if(Input.GetKeyDown(KeyCode.Space)){
             if(!isGrounded)
                 CheckGround();
@@ -37,19 +38,10 @@ public class CharacterMovement : MonoBehaviour
         if(isGrounded && _targetVelocity != Vector2.zero){
             _rb.velocity = transform.rotation * new Vector3(_targetVelocity.x, _rb.velocity.y, _targetVelocity.y);
             Anim.SetRunMode(_targetVelocity);
-            // if(_rb.velocity.x > 0){
-            //     AnimControl.SetBool("isRunning", true);
-            // }
-            // else{
-            //     AnimControl.SetBool("isRunning", false);
-            // }
         }
         else{
             Anim.SetRunMode(Vector3.zero, false);
-            // AnimControl.SetBool("isRunning", false);
         }
-        
-
     }
 
     private void CheckGround(){
@@ -64,5 +56,10 @@ public class CharacterMovement : MonoBehaviour
             isGrounded = true;
             Anim.Jump(false);
         }
+    }
+
+    private void CameraSwitch(){
+        CameraFirst.SetActive(!CameraFirst.activeSelf);
+        CameraThird.SetActive(!CameraThird.activeSelf);
     }
 }
