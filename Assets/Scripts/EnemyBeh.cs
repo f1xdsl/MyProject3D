@@ -48,7 +48,12 @@ public class EnemyBeh : MonoBehaviour
         }
         
         if(state == State.isAttacking){
-            transform.LookAt(player.position);
+            if(!coroutineActive){
+                transform.LookAt(player.position);
+                coroutineActive = true;
+                StartCoroutine("Turning");
+            }
+        
         }
 
 
@@ -92,6 +97,10 @@ public class EnemyBeh : MonoBehaviour
         
     }
     private IEnumerator Chasing(){
+        coroutineActive = false;
+        yield return new WaitForSeconds(0.1f);
+    }
+    private IEnumerator Turning(){
         coroutineActive = false;
         yield return new WaitForSeconds(0.1f);
 

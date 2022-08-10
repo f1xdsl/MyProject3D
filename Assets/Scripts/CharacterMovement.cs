@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -11,13 +12,16 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] GameObject CameraThird;
     public bool isGrounded = false;
     private int _runDir;
-    // public Animator AnimControl;
+    private List<SkinnedMeshRenderer> meshes;
     private Anim Anim;
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
-        // AnimControl = GetComponent<Animator>();
         Anim = GetComponent<Anim>();
-
+        meshes = new List<SkinnedMeshRenderer>();
+        var skins = GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach(SkinnedMeshRenderer skin in skins){
+            meshes.Add(skin);
+        }
     }
 
     private void Update() {
@@ -28,12 +32,12 @@ public class CharacterMovement : MonoBehaviour
             if(isGrounded){
                 _rb.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
                 isGrounded = false;
-                // AnimControl.SetBool("isJumping", true);
                 Anim.Jump(true);
             }
         }
     }
     private void FixedUpdate() {
+        
         Vector2 _targetVelocity = new Vector2(Input.GetAxis("Horizontal") * Speed, Input.GetAxis("Vertical") * Speed);
         if(isGrounded && _targetVelocity != Vector2.zero){
             _rb.velocity = transform.rotation * new Vector3(_targetVelocity.x, _rb.velocity.y, _targetVelocity.y);
@@ -61,5 +65,15 @@ public class CharacterMovement : MonoBehaviour
     private void CameraSwitch(){
         CameraFirst.SetActive(!CameraFirst.activeSelf);
         CameraThird.SetActive(!CameraThird.activeSelf);
+        if(CameraFirst.activeSelf){
+            foreach(SkinnedMeshRenderer mesh in meshes){
+                mesh.enabled = false;
+            }
+        }
+        else{
+            foreach(SkinnedMeshRenderer mesh in meshes){
+                mesh.enabled = true;
+            }
+        }
     }
 }
